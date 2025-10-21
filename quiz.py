@@ -25,6 +25,7 @@ if page == "Quiz":
         st.error(f"Failed to load quiz for {selected_class}: {e}")
         st.stop()
 
+    # Shuffle & initialize session state
     if "shuffled_questions" not in st.session_state or st.session_state.get("current_class") != selected_class:
         random.shuffle(questions)
         st.session_state.shuffled_questions = questions
@@ -38,19 +39,34 @@ if page == "Quiz":
     current_q = st.session_state.shuffled_questions[q_index]
 
     st.write(f"**Question {q_index + 1} of {len(questions)}**")
-    selected = st.radio(current_q["question"], current_q["options"], key=f"radio_{q_index}")
+    st.markdown(f"### {current_q['question']}")
 
+    # --- Determine question type ---
+    if "options" in current_q and isinstance(current_q["options"], list):
+        # MULTIPLE CHOICE question
+        selected = st.radio("Choose one:", current_q["options"], key=f"radio_{q_index}")
+        user_answer = selected
+    else:
+        # FILL IN THE BLANK question
+        user_answer = st.text_input("✏️ Type your answer:", key=f"input_{q_index}")
+
+    # --- Submit Answer ---
     if st.button("Submit Answer") and not st.session_state.submitted:
-        st.session_state.selected = selected
         st.session_state.submitted = True
-        if selected == current_q["answer"]:
+
+        correct = str(current_q["answer"]).strip().lower()
+        typed = str(user_answer).strip().lower()
+
+        if typed == correct:
             st.success("✅ Correct!")
             st.session_state.score += 1
         else:
             st.error(f"❌ Incorrect. The correct answer is: **{current_q['answer']}**")
-            if "why" in current_q:
-                st.info(f"💡 Explanation: {current_q['why']}")
 
+        if "why" in current_q:
+            st.info(f"💡 Explanation: {current_q['why']}")
+
+    # --- Next Button ---
     if st.session_state.submitted:
         if st.button("Next Question"):
             if q_index < len(questions) - 1:
@@ -66,7 +82,6 @@ if page == "Quiz":
 elif page == "Study Guide":
     st.title(f"📘 Study Guide: {selected_class} Solutions")
 
-    # Fix key name by removing space and lowercasing
     selected_class_id = selected_class.replace(" ", "").lower()
 
     pdf_urls = {
@@ -83,4 +98,3 @@ elif page == "Study Guide":
         )
     else:
         st.warning("⚠️ No PDF study guide found for this class yet.")
-
