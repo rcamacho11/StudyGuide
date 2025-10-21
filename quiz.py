@@ -72,7 +72,7 @@ elif page == "Study Guide":
 
     # Map class to PDF URL
     pdf_urls = {
-        "CSE 185": "https://raw.githubusercontent.com/rcamacho11/StudyGuide/b4d25eac4222aae6d0a5aeb952eb9816b7dd5b23/cse%20185%202021%20midterm%20exam%201%20solution%20(2).pdf",
+        "CSE 185": "https://raw.github.com/rcamacho11/StudyGuide/8b1832f922475b3970228a5941eac234c7ae0cfe/study_guides/cse185.pdf",
         # Add more here for other classes
     }
 
