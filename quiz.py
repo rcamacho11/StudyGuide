@@ -350,12 +350,13 @@ if page == "Quiz":
 elif page == "Study Guide":
     st.title("📘 Study Guide: CSE 185 Midterm Solutions")
 
-    try:
-        with open("cse 185 2021 midterm exam 1 solution (2).pdf", "rb") as f:
-            pdf_data = f.read()
+    # Public raw GitHub URL to the PDF
+    pdf_url = "https://raw.githubusercontent.com/rcamacho11/StudyGuide/b4d25eac4222aae6d0a5aeb952eb9816b7dd5b23/cse%20185%202021%20midterm%20exam%201%20solution%20(2).pdf"
 
-        base64_pdf = base64.b64encode(pdf_data).decode('utf-8')
-        pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="900px" type="application/pdf"></iframe>'
-        st.markdown(pdf_display, unsafe_allow_html=True)
-    except FileNotFoundError:
-        st.error("❌ PDF not found. Make sure it is in the same folder as this script.")
+    # Embed PDF using Mozilla's pdf.js online viewer
+    pdfjs_viewer = f"https://mozilla.github.io/pdf.js/web/viewer.html?file={pdf_url}"
+
+    st.markdown(
+        f'<iframe src="{pdfjs_viewer}" width="100%" height="900px" style="border: none;"></iframe>',
+        unsafe_allow_html=True
+    )
