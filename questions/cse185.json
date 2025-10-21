@@ -257,5 +257,57 @@
     {"question": "The least squares solution finds the best line through data by minimizing the sum of squared perpendicular distances.",
      "options": ["True", "False"],
      "answer": "False",
-     "why": "Standard least squares minimizes vertical residuals, not perpendicular distances."}
+     "why": "Standard least squares minimizes vertical residuals, not perpendicular distances."},
+
+  {
+    "question": "Compute the corner response R for the Harris detector given M = [[0.8, 0.2], [0.2, 0.8]]. (Use R = det(M) - 0.04 * (trace(M))^2.) Enter the final numeric value below.",
+    "answer": "R = 0.4976",
+    "why": "Step 1: det(M) = (0.8)(0.8) - (0.2)(0.2) = 0.64 - 0.04 = 0.60. Step 2: trace(M) = 0.8 + 0.8 = 1.6. Step 3: R = 0.60 - 0.04*(1.6)^2 = 0.60 - 0.1024 = 0.4976."
+  },
+  {
+    "question": "Given the image gradient Ix = 0.9 and Iy = 0.1, compute the structure tensor M and classify the region (flat / edge / corner).",
+    "answer": "Corner region",
+    "why": "Step 1: M = [[Ix², IxIy], [IyIx, Iy²]] = [[0.81, 0.09], [0.09, 0.01]]. Step 2: det(M) = 0.81*0.01 - 0.09*0.09 = 0.0081 - 0.0081 = 0. Step 3: trace(M) = 0.82. Since gradients are nonzero in both directions, it’s a corner region."
+  },
+  {
+    "question": "A point (x, y) = (2, 6) is detected in an image. Write its corresponding line in Hough (m, b) space. Express m in terms of b.",
+    "answer": "m = -0.5b + 3",
+    "why": "Start from y = m*x + b → 6 = 2m + b → 2m = -b + 6 → m = -0.5b + 3. This describes the sinusoidal curve in (m, b) parameter space."
+  },
+  {
+    "question": "Compute the Fourier magnitude response of a simple 1D signal f(x) = [1, 2, 3, 4]. Write the magnitude of its first non-zero frequency component.",
+    "answer": "≈ 2.83",
+    "why": "Step 1: DFT of f = [10, -2+2j, -2, -2-2j]. Step 2: First non-zero component F1 = -2 + 2j. Step 3: |F1| = sqrt((-2)² + (2)²) = sqrt(8) ≈ 2.83."
+  },
+  {
+    "question": "For a Gaussian filter with σ = 2, what is the value of the Gaussian at x = 1? (Use G(x) = exp(-x² / (2σ²)).)",
+    "answer": "≈ 0.8825",
+    "why": "Step 1: Substitute x = 1, σ = 2 → G(1) = exp(-1² / (2*2²)) = exp(-1/8). Step 2: exp(-0.125) ≈ 0.8825."
+  },
+  {
+    "question": "If a Sobel filter in x-direction gives gradient Gx = 120 and Gy = 160, compute the edge magnitude and orientation (in degrees).",
+    "answer": "Magnitude = 200, θ = 53.13°",
+    "why": "Step 1: Magnitude = sqrt(Gx² + Gy²) = sqrt(120² + 160²) = 200. Step 2: Orientation = atan2(Gy, Gx) = atan2(160, 120) = 53.13°."
+  },
+  {
+    "question": "A line in Euclidean coordinates is y = 2x + 1. Express this line in polar form (r, θ) satisfying r = x cosθ + y sinθ.",
+    "answer": "θ ≈ -26.565°, r ≈ -0.447",
+    "why": "Step 1: For y = mx + b → m = 2 → θ = arctan(-1/m) = arctan(-0.5) ≈ -26.565°. Step 2: r = b * sinθ = 1 * sin(-26.565°) ≈ -0.447."
+  },
+  {
+    "question": "Given disparity d = 8 pixels, focal length f = 800 px, and baseline B = 0.12 m, compute the depth Z of a point in stereo vision.",
+    "answer": "Z = 12 m",
+    "why": "Step 1: Formula: Z = (f * B) / d. Step 2: Substitute → Z = (800 * 0.12) / 8 = 96 / 8 = 12 m."
+  },
+  {
+    "question": "Given Ix = 10, Iy = 5, and filter window W = [[Ix², IxIy], [IyIx, Iy²]], compute det(W) and trace(W).",
+    "answer": "det = 0, trace = 125",
+    "why": "Step 1: W = [[100, 50], [50, 25]]. Step 2: det = 100*25 - 50*50 = 2500 - 2500 = 0. Step 3: trace = 100 + 25 = 125."
+  },
+  {
+    "question": "If the input signal f(x) = δ(x) and g(x) = [1, -1], compute (f * g)(x).",
+    "answer": "[1, -1]",
+    "why": "Step 1: Convolution with δ(x) leaves the signal unchanged. Step 2: Therefore, (f * g)(x) = g(x) = [1, -1]."
+  }
+
 ]
