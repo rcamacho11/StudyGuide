@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import base64
 
 questions = [
     # --- FILTERS ---
@@ -271,49 +272,90 @@ questions = [
      "why": "Standard least squares minimizes vertical residuals, not perpendicular distances."}
 ]
 
+# Must be the VERY FIRST Streamlit command
+st.set_page_config(page_title="CSE 185 Midterm App", layout="wide")
+
+# Sidebar page switch
+page = st.sidebar.selectbox("Go to", ["Quiz", "Study Guide"])
+
 # -------------------------------
-# Streamlit App
+# Quiz Page
 # -------------------------------
-st.set_page_config(page_title="🧪 CSE 185 Quiz", layout="centered")
-st.title("🧪 CSE 185 Midterm Practice Quiz")
+if page == "Quiz":
+    st.title("🧪 CSE 185 Midterm Practice Quiz")
 
-# Shuffle once
-if "shuffled_questions" not in st.session_state:
-    random.shuffle(questions)
-    st.session_state.shuffled_questions = questions
-    st.session_state.current_q = 0
-    st.session_state.score = 0
-    st.session_state.submitted = False
-    st.session_state.selected = None
+    # -------------------------------
+    # Sample questions (you should paste all 52+ here)
+    # -------------------------------
+    questions = [
+        {
+            "question": "What does a Gaussian filter do in image processing?",
+            "options": ["Enhances edges", "Blurs image", "Detects corners", "Sharpens details"],
+            "answer": "Blurs image",
+            "why": "Gaussian filtering smooths the image by averaging nearby pixel values, reducing noise."
+        },
+        {
+            "question": "What does the Harris Corner Detector detect?",
+            "options": ["Edges", "Textures", "Uniform regions", "Corners"],
+            "answer": "Corners",
+            "why": "It finds points where intensity changes significantly in both directions, indicating corners."
+        },
+        # ...add the rest of your questions here...
+    ]
 
-# Get current question
-q_index = st.session_state.current_q
-current_q = st.session_state.shuffled_questions[q_index]
+    # Shuffle once
+    if "shuffled_questions" not in st.session_state:
+        random.shuffle(questions)
+        st.session_state.shuffled_questions = questions
+        st.session_state.current_q = 0
+        st.session_state.score = 0
+        st.session_state.submitted = False
+        st.session_state.selected = None
 
-# UI
-st.write(f"**Question {q_index + 1} of {len(questions)}**")
-selected = st.radio(current_q["question"], current_q["options"], key=f"radio_{q_index}")
+    # Get current question
+    q_index = st.session_state.current_q
+    current_q = st.session_state.shuffled_questions[q_index]
 
-# Submit logic
-if st.button("Submit Answer") and not st.session_state.submitted:
-    st.session_state.selected = selected
-    st.session_state.submitted = True
-    if selected == current_q["answer"]:
-        st.success("✅ Correct!")
-        st.session_state.score += 1
-    else:
-        st.error(f"❌ Incorrect. The correct answer is: **{current_q['answer']}**")
-        if "why" in current_q:
-            st.info(f"💡 **Explanation:** {current_q['why']}")
+    # Display question
+    st.write(f"**Question {q_index + 1} of {len(questions)}**")
+    selected = st.radio(current_q["question"], current_q["options"], key=f"radio_{q_index}")
 
-# Next Question
-if st.session_state.submitted:
-    if st.button("Next Question"):
-        if q_index < len(questions) - 1:
-            st.session_state.current_q += 1
-            st.session_state.submitted = False
-            st.session_state.selected = None
-            st.rerun()
+    # Submit button
+    if st.button("Submit Answer") and not st.session_state.submitted:
+        st.session_state.selected = selected
+        st.session_state.submitted = True
+        if selected == current_q["answer"]:
+            st.success("✅ Correct!")
+            st.session_state.score += 1
         else:
-            st.balloons()
-            st.success(f"🎉 Quiz complete! Final score: **{st.session_state.score} / {len(questions)}**")
+            st.error(f"❌ Incorrect. The correct answer is: **{current_q['answer']}**")
+            if "why" in current_q:
+                st.info(f"💡 **Explanation:** {current_q['why']}")
+
+    # Next button
+    if st.session_state.submitted:
+        if st.button("Next Question"):
+            if q_index < len(questions) - 1:
+                st.session_state.current_q += 1
+                st.session_state.submitted = False
+                st.session_state.selected = None
+                st.rerun()
+            else:
+                st.balloons()
+                st.success(f"🎉 Quiz complete! Final score: **{st.session_state.score} / {len(questions)}**")
+
+# -------------------------------
+# Study Guide Page
+# -------------------------------
+elif page == "Study Guide":
+    st.title("📘 Study Guide: CSE 185 Midterm Solutions")
+
+    try:
+        with open("cse 185 2021 midterm exam 1 solution (2).pdf", "rb") as f:
+            pdf_data = f.read()
+
+        base64_pdf = base64.b64encode(pdf_data).decode('utf-8')
+        pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="900px" type="application/pdf"></iframe>'
+        st.markdown(pdf_display, unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.error("❌ PDF not found. Make sure it is in the same folder as this script.")
