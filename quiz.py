@@ -1,22 +1,19 @@
 import streamlit as st
 import json
-import base64
 import random
 import os
 
 st.set_page_config(page_title="📚 Quiz App", layout="centered")
 QUESTION_DIR = "questions"
-PDF_DIR = "study_guide"
-st.sidebar.title("📘 Select Class & Page")
 
-# List class options
+# Sidebar class and page selection
+st.sidebar.title("📘 Select Class & Page")
 quiz_files = [f for f in os.listdir(QUESTION_DIR) if f.endswith(".json")]
 class_options = [f.replace(".json", "").upper() for f in quiz_files]
-
 selected_class = st.sidebar.selectbox("Choose Class", class_options)
 page = st.sidebar.radio("Go to", ["Quiz", "Study Guide"])
 
-# Quiz Page
+# QUIZ PAGE
 if page == "Quiz":
     st.title(f"🧪 {selected_class} Quiz")
 
@@ -28,7 +25,6 @@ if page == "Quiz":
         st.error(f"Failed to load quiz for {selected_class}: {e}")
         st.stop()
 
-    # Shuffle only once per class
     if "shuffled_questions" not in st.session_state or st.session_state.get("current_class") != selected_class:
         random.shuffle(questions)
         st.session_state.shuffled_questions = questions
@@ -66,23 +62,25 @@ if page == "Quiz":
                 st.balloons()
                 st.success(f"🎉 Quiz complete! Final score: **{st.session_state.score} / {len(questions)}**")
 
-# Study Guide Page
+# STUDY GUIDE PAGE
 elif page == "Study Guide":
-    st.title(f"📘 Study Guide: {selected_class}")
+    st.title(f"📘 Study Guide: {selected_class} Solutions")
 
-    # Map class to PDF URL
+    # Fix key name by removing space and lowercasing
+    selected_class_id = selected_class.replace(" ", "").lower()
+
     pdf_urls = {
-        "CSE 185": "https://raw.githubusercontent.com/rcamacho11/StudyGuide/8b1832f922475b3970228a5941eac234c7ae0cfe/study_guides/cse185.pdf",
-        # Add more here for other classes
+        "cse185": "https://raw.githubusercontent.com/rcamacho11/StudyGuide/a4f54c41155a908c6ce1af98d952706598ddb92e/study_guides/cse185.pdf"
     }
 
-    if selected_class in pdf_urls:
-        pdf_url = pdf_urls[selected_class]
-        pdfjs_viewer = f"https://mozilla.github.io/pdf.js/web/viewer.html?file={pdf_url}"
+    if selected_class_id in pdf_urls:
+        pdf_url = pdf_urls[selected_class_id]
+        viewer_url = f"https://mozilla.github.io/pdf.js/web/viewer.html?file={pdf_url}"
 
         st.markdown(
-            f'<iframe src="{pdfjs_viewer}" width="100%" height="900px" style="border: none;"></iframe>',
+            f'<iframe src="{viewer_url}" width="100%" height="900px" style="border: none;"></iframe>',
             unsafe_allow_html=True
         )
     else:
         st.warning("⚠️ No PDF study guide found for this class yet.")
+
