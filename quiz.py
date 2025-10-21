@@ -119,6 +119,56 @@ questions = [
 "answer": "Homography"
 },
 
+    {
+        "question": "In the frequency domain, convolution corresponds to multiplication.",
+        "options": ["True", "False"],
+        "answer": "True"
+    },
+    {
+        "question": "A small standard deviation in a Gaussian filter will blur the image more than a large standard deviation.",
+        "options": ["True", "False"],
+        "answer": "False"
+    },
+    {
+        "question": "Harris corner detection is based on computing image gradients in both x and y directions.",
+        "options": ["True", "False"],
+        "answer": "True"
+    },
+    {
+        "question": "The determinant and trace of the Harris matrix are used to classify pixels as edges, corners, or flat regions.",
+        "options": ["True", "False"],
+        "answer": "True"
+    },
+    {
+        "question": "Image warping is only possible if the input and output images are the same size.",
+        "options": ["True", "False"],
+        "answer": "False"
+    },
+    {
+        "question": "RANSAC is robust to outliers in feature matching.",
+        "options": ["True", "False"],
+        "answer": "True"
+    },
+    {
+        "question": "Hough transform maps every point in the image space to a point in parameter space.",
+        "options": ["True", "False"],
+        "answer": "False"  # It maps to a sinusoid (a curve), not a single point
+    },
+    {
+        "question": "Stereo disparity is higher for objects that are farther away.",
+        "options": ["True", "False"],
+        "answer": "False"
+    },
+    {
+        "question": "Non-maximum suppression in Canny edge detection is used to thin out edges.",
+        "options": ["True", "False"],
+        "answer": "True"
+    },
+    {
+        "question": "The least squares solution finds the best line through data by minimizing the sum of squared perpendicular distances.",
+        "options": ["True", "False"],
+        "answer": "False"  # It minimizes vertical distances, not perpendicular ones
+    }
 
 
 ]
