@@ -308,6 +308,6 @@
     "question": "If the input signal f(x) = δ(x) and g(x) = [1, -1], compute (f * g)(x).",
     "answer": "[1, -1]",
     "why": "Step 1: Convolution with δ(x) leaves the signal unchanged. Step 2: Therefore, (f * g)(x) = g(x) = [1, -1]."
-  }
+  },
 
 ]
