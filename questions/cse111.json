@@ -152,5 +152,114 @@
     "question": "Write a relational algebra expression to get maker and price of all PCs.",
     "answer": "π_maker,price(σ_Product.model=PC.model(Product × PC))",
     "why": "Join Product and PC by model, then project maker and price."
+  },
+
+  {
+    "question": "Given the following two tables:\nR(a, b)\n2 | 7\n4 | 5\n3 | 6\n\nS(a, c, d)\n3 | 6 | 4\n4 | 7 | 2\n2 | 5 | 5\n\nWhat is the result of: SELECT * FROM R, S;",
+    "answer": "9",
+    "why": "R has 3 rows, S has 3 rows → 3 × 3 = 9 combinations with full attributes."
+  },
+  {
+    "question": "SELECT R.a, R.b FROM R, S WHERE b = c\n\nR(a, b)\n2 | 7\n4 | 5\n3 | 6\n\nS(a, c, d)\n3 | 6 | 4\n4 | 7 | 2\n2 | 5 | 5",
+    "answer": "[2,7],[3,6],[4,5]",
+    "why": "Match R.b with S.c: 7=7, 6=6, 5=5 → all rows match."
+  },
+  {
+    "question": "SELECT R.a FROM R, S WHERE b >= c\n\nR(a, b)\n2 | 7\n4 | 5\n3 | 6\n\nS(a, c, d)\n3 | 6 | 4\n4 | 7 | 2\n2 | 5 | 5",
+    "answer": "[2, 4, 3, 2, 4, 3, 2, 4, 3]",
+    "why": "Check all (R.b >= S.c); each R row checked against 3 S rows = 9 checks; all pass."
+  },
+  {
+    "question": "SELECT * FROM S S1, S S2 WHERE S1.a <> S2.d\n\nS(a, c, d)\n3 | 6 | 4\n4 | 7 | 2\n2 | 5 | 5",
+    "answer": "6",
+    "why": "Compare each pair from S1 × S2 and keep those where S1.a ≠ S2.d."
+  },
+  {
+    "question": "SELECT * FROM R, S S1, S S2 WHERE R.a = S1.d\n\nR(a, b)\n2 | 7\n4 | 5\n3 | 6\n\nS(a, c, d)\n3 | 6 | 4\n4 | 7 | 2\n2 | 5 | 5",
+    "answer": "3",
+    "why": "R.a must match S1.d (values 2, 4, 5); three matches possible."
+  },
+  {
+    "question": "SELECT b AS x FROM R INTERSECT SELECT c AS x FROM S\n\nR(a, b)\n2 | 7\n4 | 5\n3 | 6\n\nS(a, c, d)\n3 | 6 | 4\n4 | 7 | 2\n2 | 5 | 5",
+    "answer": "[5,6,7]",
+    "why": "R.b values: 7, 5, 6; S.c values: 6, 7, 5 → intersection = [5, 6, 7]"
+  },
+
+  {
+    "question": "Given:\nR(a,b):\n2 | 9\n4 | 4\n2 | 6\n\nS(a,c,d):\n2 | 2 | 8\n4 | 4 | 2\n\nTranslate: SELECT * FROM R, S",
+    "answer": "π(R.a, R.b, S.a, S.c, S.d)(R × S)",
+    "why": "Cartesian product of R and S → all combinations of rows"
+  },
+  {
+    "question": "Relational algebra for: SELECT R.a, b, c FROM R, S WHERE R.a > 3",
+    "answer": "π(R.a, R.b, S.c)(σ_{R.a>3}(R × S))",
+    "why": "Filter first (R.a > 3), then project selected attributes"
+  },
+  {
+    "question": "RA expression for:\nSELECT R.a, S.d FROM R, S WHERE (S.a > 3) AND (R.a > 3) AND (R.b = S.c)",
+    "answer": "π(R.a, S.d)(σ_{S.a>3 ∧ R.a>3 ∧ R.b=S.c}(R × S))",
+    "why": "Conjunction of all conditions applied before projection"
+  },
+  {
+    "question": "SELECT R.a, COUNT(*) AS cnt FROM R, S WHERE (R.a > 3 ) AND (R.b = S.c) GROUP BY R.a",
+    "answer": "γ_{R.a; COUNT(*)→cnt}(σ_{R.a>3 ∧ R.b=S.c}(R × S))",
+    "why": "Group by R.a after filtering and joining"
+  },
+  {
+    "question": "SELECT DISTINCT R1.a, R2.a FROM R R1, R R2 WHERE (R1.b > 5) AND (R1.b <> R2.b) ORDER BY R1.a",
+    "answer": "δ(π(R1.a, R2.a)(σ_{R1.b>5 ∧ R1.b≠R2.b}(R × R)))",
+    "why": "Self-join with condition and DISTINCT, sorted by R1.a"
+  },
+  {
+    "question": "SELECT COUNT(*) FROM R, S S1, S S2 WHERE (R.a = S1.c) AND (R.b = S2.d)",
+    "answer": "COUNT of tuples satisfying R.a=S1.c and R.b=S2.d",
+    "why": "Check every R with every S1 and S2 combination"
+  },
+
+  {
+    "question": "What is the SQL and RA for: What is the average price of a Printer?\nTables: Product, Printer",
+    "answer": "SELECT AVG(price) FROM Printer;",
+    "why": "Aggregation on single table"
+  },
+  {
+    "question": "How many models of laser color Printers are available?",
+    "answer": "SELECT COUNT(DISTINCT model) FROM Printer WHERE type = 'laser' AND color = true;",
+    "why": "Filter and count unique models"
+  },
+  {
+    "question": "For each Laptop screen size, find the minimum price of Laptops in that category.",
+    "answer": "SELECT screen, MIN(price) FROM Laptop GROUP BY screen;",
+    "why": "Group by screen, compute min"
+  },
+  {
+    "question": "What makers produce color Printers cheaper than $1,000?",
+    "answer": "SELECT DISTINCT maker FROM Product P, Printer Pr WHERE P.model = Pr.model AND Pr.color = true AND Pr.price < 1000;",
+    "why": "Join Product and Printer and filter"
+  },
+  {
+    "question": "What makers produce PCs and Printers but do not produce Laptops?",
+    "answer": "SELECT maker FROM Product WHERE type = 'pc' INTERSECT SELECT maker FROM Product WHERE type = 'printer' EXCEPT SELECT maker FROM Product WHERE type = 'laptop';",
+    "why": "Set ops on filtered Product entries"
+  },
+  {
+    "question": "What makers produce exactly a single Laptop model?",
+    "answer": "SELECT maker FROM Product WHERE type = 'laptop' GROUP BY maker HAVING COUNT(DISTINCT model) = 1;",
+    "why": "Group laptops by maker and filter"
+  },
+  {
+    "question": "Find the average price for each product category (PC, Laptop, Printer) for every maker having products in all the categories.",
+    "answer": "Complex query using GROUP BY maker, type and HAVING COUNT(DISTINCT type) = 3",
+    "why": "Need to ensure each maker appears with all 3 types, then group"
+  },
+  {
+    "question": "What Laptop screen sizes are offered with at least 10 different speeds?",
+    "answer":"SELECT screen FROM Laptop GROUP BY screen HAVING COUNT(DISTINCT speed) >= 10;",
+    "why": "Grouping + count distinct in aggregation"
+  },
+  {
+    "question": "What Printers produced by the maker of the most expensive PC that also produces Printers are the cheapest?",
+    "answer": "Complex nested query with subquery for max PC price, join Product-Printers, then filter by min price",
+    "why": "Requires nested subqueries, join, and min filter"
   }
+
 ]
