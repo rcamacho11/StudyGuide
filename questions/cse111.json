@@ -1,0 +1,156 @@
+[
+  {
+    "question": "What is a key in the relational model?",
+    "options": ["A value used to sort tuples", "An attribute or set of attributes with unique values", "A foreign table reference", "A function to compute aggregates"],
+    "answer": "An attribute or set of attributes with unique values",
+    "why": "A key uniquely identifies tuples in a relation. No two tuples share the same value for the key."
+  },
+  {
+    "question": "Which of the following is NOT a valid SQL data type in SQLite?",
+    "options": ["VARCHAR", "DECIMAL", "BOOLEAN", "JSON"],
+    "answer": "JSON",
+    "why": "SQLite does not have a native JSON type; it stores JSON as TEXT."
+  },
+  {
+    "question": "True or False: In the relational model, NULL is treated as a value that can participate in equality comparisons.",
+    "options": ["True", "False"],
+    "answer": "False",
+    "why": "NULL represents unknown or missing values and is not equal to anything, not even another NULL."
+  },
+
+  {
+    "question": "Write a CREATE TABLE statement for a table 'Student' with columns id (primary key), name (text), and age (integer).",
+    "answer": "CREATE TABLE Student (id INTEGER PRIMARY KEY, name TEXT, age INTEGER);",
+    "why": "Defines a schema with correct types and primary key syntax in SQLite."
+  },
+  {
+    "question": "How do you add a column 'email' to an existing table 'Student' in SQLite?",
+    "answer": "ALTER TABLE Student ADD COLUMN email TEXT;",
+    "why": "SQLite supports ADD COLUMN via ALTER TABLE, but not DROP COLUMN."
+  },
+  {
+    "question": "True or False: SQLite allows you to define more than one PRIMARY KEY per table.",
+    "options": ["True", "False"],
+    "answer": "False",
+    "why": "Only one PRIMARY KEY constraint can be defined per table."
+  },
+
+  {
+    "question": "Insert a new PC with model 2001, speed 2.5, ram 8, hd 256, and price 1200 into the PC table.",
+    "answer": "INSERT INTO PC VALUES (2001, 2.5, 8, 256, 1200);",
+    "why": "Values must follow the attribute order in the schema PC(model, speed, ram, hd, price)."
+  },
+  {
+    "question": "Write a DELETE statement that removes all printers priced over 1000.",
+    "answer": "DELETE FROM Printer WHERE price > 1000;",
+    "why": "Standard DELETE FROM with a WHERE condition."
+  },
+  {
+    "question": "How do you double the RAM for all PCs with price under 1000?",
+    "answer": "UPDATE PC SET ram = ram * 2 WHERE price < 1000;",
+    "why": "UPDATE allows arithmetic expressions and conditionally targets rows."
+  },
+
+  {
+    "question": "What does the following query return? SELECT model FROM PC WHERE speed > 3.0;",
+    "answer": "Models of PCs with speed greater than 3.0 GHz.",
+    "why": "Simple SELECT with WHERE condition on a numeric attribute."
+  },
+  {
+    "question": "True or False: SELECT * FROM Cities_Population WHERE city LIKE 'San%' returns cities starting with 'San'.",
+    "options": ["True", "False"],
+    "answer": "True",
+    "why": "LIKE 'San%' matches any string beginning with 'San'."
+  },
+  {
+    "question": "Write a query to get all cities in county 'Merced' where population in 2010 was over 10,000.",
+    "answer": "SELECT city FROM Cities_Population WHERE county = 'Merced' AND pop_2010 > 10000;",
+    "why": "Combines two WHERE conditions with AND."
+  },
+
+  {
+    "question": "Write a query that returns the number of laptops for each screen size.",
+    "answer": "SELECT screen, COUNT(*) FROM Laptop GROUP BY screen;",
+    "why": "This is a GROUP BY aggregation on the 'screen' attribute."
+  },
+  {
+    "question": "How do you get the average price of all PCs made by maker 'A'?",
+    "answer": "SELECT AVG(price) FROM Product P, PC WHERE P.model = PC.model AND P.maker = 'A';",
+    "why": "Join Product and PC, filter by maker, then apply AVG aggregation."
+  },
+  {
+    "question": "Which clause filters groups after aggregation?",
+    "options": ["WHERE", "HAVING", "ORDER BY", "GROUP BY"],
+    "answer": "HAVING",
+    "why": "WHERE filters individual rows; HAVING filters grouped results."
+  },
+
+  {
+    "question": "What is the result of: SELECT DISTINCT type FROM Product;",
+    "answer": "A list of unique product types (e.g., 'pc', 'laptop', 'printer').",
+    "why": "DISTINCT removes duplicates from the result set."
+  },
+  {
+    "question": "Write a query that returns makers who produce both laptops and PCs.",
+    "answer": "SELECT DISTINCT maker FROM Product WHERE type = 'laptop' INTERSECT SELECT DISTINCT maker FROM Product WHERE type = 'pc';",
+    "why": "INTERSECT keeps makers found in both queries."
+  },
+  {
+    "question": "Which SQL keyword removes duplicates from a result set?",
+    "options": ["UNION ALL", "GROUP BY", "DISTINCT", "HAVING"],
+    "answer": "DISTINCT",
+    "why": "DISTINCT eliminates duplicate rows from the result."
+  },
+
+  {
+    "question": "Write a join query to return all printers and their makers.",
+    "answer": "SELECT P.maker, Pr.model FROM Product P, Printer Pr WHERE P.model = Pr.model;",
+    "why": "Join Product and Printer on model to connect maker with printer."
+  },
+  {
+    "question": "True or False: In a natural join, common attribute names are automatically matched.",
+    "options": ["True", "False"],
+    "answer": "True",
+    "why": "Natural join matches attributes with the same name and equates them."
+  },
+  {
+    "question": "What does a LEFT OUTER JOIN do?",
+    "options": ["Returns only matched rows", "Returns only unmatched rows", "Returns all from left table and matched from right", "Returns intersection only"],
+    "answer": "Returns all from left table and matched from right",
+    "why": "LEFT OUTER JOIN retains all rows from the left, filling NULLs where there's no match on the right."
+  },
+
+  {
+    "question": "Write a query to return printers made by the same maker as the most expensive PC.",
+    "answer": "SELECT DISTINCT Pr.model FROM Product P1, Product P2, Printer Pr, PC WHERE P1.model = PC.model AND P2.model = Pr.model AND P1.maker = P2.maker AND PC.price = (SELECT MAX(price) FROM PC);",
+    "why": "Find maker of most expensive PC, then get that maker’s printers."
+  },
+  {
+    "question": "True or False: A scalar subquery must return exactly one value.",
+    "options": ["True", "False"],
+    "answer": "True",
+    "why": "Scalar subqueries are used in expressions and must return one value."
+  },
+  {
+    "question": "Write a query using EXISTS to find makers who produce both PCs and Laptops.",
+    "answer": "SELECT DISTINCT maker FROM Product P WHERE type = 'pc' AND EXISTS (SELECT * FROM Product P2 WHERE P.maker = P2.maker AND P2.type = 'laptop');",
+    "why": "EXISTS tests whether a related tuple exists for the maker."
+  },
+
+  {
+    "question": "Translate this SQL into relational algebra: SELECT model FROM PC WHERE price > 1000;",
+    "answer": "π_model(σ_price>1000(PC))",
+    "why": "Apply selection first, then project the model attribute."
+  },
+  {
+    "question": "True or False: The relational algebra operation σ applies to rows, while π applies to columns.",
+    "options": ["True", "False"],
+    "answer": "True",
+    "why": "σ (selection) filters tuples; π (projection) selects attributes."
+  },
+  {
+    "question": "Write a relational algebra expression to get maker and price of all PCs.",
+    "answer": "π_maker,price(σ_Product.model=PC.model(Product × PC))",
+    "why": "Join Product and PC by model, then project maker and price."
+  }
+]
