@@ -260,6 +260,89 @@
     "question": "What Printers produced by the maker of the most expensive PC that also produces Printers are the cheapest?",
     "answer": "Complex nested query with subquery for max PC price, join Product-Printers, then filter by min price",
     "why": "Requires nested subqueries, join, and min filter"
+  },
+  
+  {
+    "question": "Write a SQL schema for the relation Product(maker, model, type).",
+    "answer": "CREATE TABLE Product (maker CHAR(20), model INT, type CHAR(20));",
+    "why": "Simple CREATE TABLE with appropriate attribute names and types reflecting the relational model."
+  },
+  {
+    "question": "Define a schema for relation PC including model as primary key.",
+    "answer": "CREATE TABLE PC (model INT PRIMARY KEY, speed FLOAT, ram INT, hd INT, price INT);",
+    "why": "Primary key constraint ensures model uniquely identifies each PC."
+  },
+  {
+    "question": "Modify the schema of Printer to delete the attribute color.",
+    "answer": "Not supported in SQLite directly; recreate table without 'color' attribute.",
+    "why": "SQLite does not support DROP COLUMN; must use CREATE + INSERT to emulate."
+  },
+  {
+    "question": "Write an INSERT command to add manufacturer C’s PC model 1100 with speed 3.2, RAM 1024, HD 180, and price 2499.",
+    "answer": [
+      "INSERT INTO Product VALUES('C', 1100, 'pc');",
+      "INSERT INTO PC VALUES(1100, 3.2, 1024, 180, 2499);"
+    ],
+    "why": "Inserts are split between Product and PC tables due to normalized design."
+  },
+  {
+    "question": "Delete all PCs with hard disk less than 100GB.",
+    "answer": "DELETE FROM PC WHERE hd < 100;",
+    "why": "Removes tuples with hd value violating threshold."
+  },
+  {
+    "question": "Update all products made by B to be made by A.",
+    "answer": "UPDATE Product SET maker = 'A' WHERE maker = 'B';",
+    "why": "Single UPDATE replaces all rows where maker = 'B'."
+  },
+  {
+    "question": "Find all products that are either PCs or Laptops.",
+    "answer": "SELECT * FROM Product WHERE type = 'pc' OR type = 'laptop';",
+    "why": "Combines the two product types using logical OR in WHERE clause."
+  },
+  {
+    "question": "Write a query to return all laptops with screen size over 15 and price below 1000.",
+    "answer": "SELECT * FROM Laptop WHERE screen > 15 AND price < 1000;",
+    "why": "Combines two selection conditions using AND."
+  },
+  {
+    "question": "Return all models of products that appear in both PC and Laptop tables.",
+    "answer": "SELECT model FROM PC INTERSECT SELECT model FROM Laptop;",
+    "why": "Uses INTERSECT to find common model values in both relations."
+  },
+  {
+    "question": "Group printers by type and return the average price for each.",
+    "answer": "SELECT type, AVG(price) FROM Printer GROUP BY type;",
+    "why": "GROUP BY type computes aggregation for each category."
+  },
+  {
+    "question": "Write a join to return all PC models and their makers.",
+    "answer": "SELECT P.maker, PC.model FROM Product P JOIN PC ON P.model = PC.model;",
+    "why": "Equi-join connects Product and PC by shared 'model' key."
+  },
+  {
+    "question": "Find all makers who make both printers and laptops.",
+    "answer": "SELECT DISTINCT maker FROM Product WHERE type = 'printer' INTERSECT SELECT DISTINCT maker FROM Product WHERE type = 'laptop';",
+    "why": "INTERSECT on maker filtered by two product types identifies overlap."
+  },
+  {
+    "question": "Write a query to return all products whose maker does not make any PCs.",
+    "answer": "SELECT DISTINCT maker FROM Product WHERE maker NOT IN (SELECT maker FROM Product WHERE type = 'pc');",
+    "why": "Uses subquery with NOT IN to exclude makers producing PCs."
+  },
+  {
+    "question": "In relational algebra, how do you express: get model numbers for PCs with speed > 2.0?",
+    "answer": "π_model(σ_speed>2.0(PC))",
+    "why": "Selection first filters tuples, projection retrieves model attribute."
+  },
+  {
+    "question": "Express in relational algebra: Find all makers of printers.",
+    "answer": "π_maker(Product ⋈ Printer)",
+    "why": "Natural join Product and Printer, then project maker."
+  },
+  {
+    "question": "Use relational algebra to find all products that are laptops or PCs.",
+    "answer": "π_model(σ_type='laptop'(Product)) ∪ π_model(σ_type='pc'(Product))",
+    "why": "Union of filtered model numbers from Product table for both types."
   }
-
 ]
